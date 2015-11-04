@@ -5,32 +5,39 @@ var apiUrl = 'http://api.wunderground.com/api/26d66392ff3b5bb7/'
 var weatherInput;
 var currentConditions
 var tenDayForcast;
-
+var ZipCode;
+var City;
 $(document).ready(init);
 
 
 
 function init(){
 console.log("ok");
-
 getWeatherAtLocation();
+$('#search').on('click',getCityZip)
 
 }
 
+function getCityZip() {
+  console.log("hello")
+ZipCode = $('#zipcode').val();
+City = $('#city').val();
+
+getWeatherSearch(City,ZipCode);
+
+}
+
+
 function getWeatherSearch(city,zipcode){
 
-if(city.length === 0 || zipcode.length === 0 ){
-  if(zipcode.length===0 || zipcode.length < 5){
-    var url = apiUrl + 'geolookup/q/'+ city +'.json';
-  }else if(city.length===0){
+
     var url = apiUrl + 'geolookup/q/'+ zipcode +'.json';
-  }else{
-    var url = apiUrl + 'geolookup/q/autoip.json';
-    alert('Please Enter a Valid Zipcode or City');
-  }
+
+
           $.get(url)    //this is a defered object or a promise, if var x = $.get(url)
           .done(function(data){
              weatherInput = data;
+             debugger;
           //console.log(weatherInput);
         //  console.log(weatherInput); //this worked
         writeCurrentWeatherNow(weatherInput);
@@ -53,9 +60,7 @@ if(city.length === 0 || zipcode.length === 0 ){
           .fail(function(error) {
             console.error(error);
           });
-}else {
-  return;
-}
+
 
 }
 
