@@ -1,6 +1,10 @@
 /** { background:#C0DEED}*/
-
-
+#search{
+  right:0;
+}
+#zipcode{
+  right:0;
+}
 #awan {
   z-index: -999;
 position:fixed;
