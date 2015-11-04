@@ -18,7 +18,45 @@ getWeatherAtLocation();
 }
 
 function getWeatherSearch(city,zipcode){
-  
+
+if(city.length === 0 || zipcode.length === 0 ){
+  if(zipcode.length===0 || zipcode.length < 5){
+    var url = apiUrl + 'geolookup/q/'+ city +'.json';
+  }else if(city.length===0){
+    var url = apiUrl + 'geolookup/q/'+ zipcode +'.json';
+  }else{
+    var url = apiUrl + 'geolookup/q/autoip.json';
+    alert('Please Enter a Valid Zipcode or City');
+  }
+          $.get(url)    //this is a defered object or a promise, if var x = $.get(url)
+          .done(function(data){
+             weatherInput = data;
+          //console.log(weatherInput);
+        //  console.log(weatherInput); //this worked
+        writeCurrentWeatherNow(weatherInput);
+              var  urlConditions = apiUrl + 'conditions/q/'+ weatherInput.location.state +'/' + weatherInput.location.city + '.json';
+                $.get(urlConditions)
+                .done(function(currentConditionsData){
+                  currentConditions = currentConditionsData;
+                //console.log(currentConditions); this worked
+                  writeCurrentConditions(currentConditionsData);
+                  var urlTenDay = apiUrl + 'forecast10day/q/'+ weatherInput.location.state +'/' + weatherInput.location.city + '.json';
+                  $.get(urlTenDay)
+                  .done(function(tenDay){
+                    tenDayForcast = tenDay;
+                    writeForcast(tenDayForcast);
+                  // console.log(tenDayForcast);
+                });
+            });
+
+          })
+          .fail(function(error) {
+            console.error(error);
+          });
+}else {
+  return;
+}
+
 }
 
 function getWeatherAtLocation() {
